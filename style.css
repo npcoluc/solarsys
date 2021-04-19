@@ -66,8 +66,8 @@ body {
   display: flex;
   -ms-flex-wrap: wrap; /* IE10 */
   flex-wrap: wrap;
-  background: rgb(1,7,8);
-  background: linear-gradient(90deg, rgba(1,7,8,1) 0%, rgba(16,18,50,1) 50%, rgba(1,7,8,1) 100%);
+  background: rgb(0,0,0);
+  background: linear-gradient(180deg, rgba(0,0,0) 0%, rgba(8,13,86,1) 50%, rgba(0,0,0) 100%);
 }
 
 /* Create two unequal columns that sits next to each other */
@@ -95,6 +95,9 @@ body {
   padding-bottom: 20px
 }
 
+iframe{
+  border-width: 0px;
+}
 
 /* Footer */
 .footer {

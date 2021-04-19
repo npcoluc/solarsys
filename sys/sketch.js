@@ -48,7 +48,22 @@ function setup() {
 
 
 function draw() {
-  background(236, 68, 10)
+  let c1 = color(236, 68, 1)
+  let c2 = color(236, 68, 20)
+  //background(236, 68, 10)
+  for(let y=0; y<width/2; y++){
+    n = map(y,0,width/2,0,1);
+    let newc = lerpColor(c1,c2,n);
+    stroke(newc);
+    line(y,0,y, width);
+  }
+  for(let y=width/2; y<width; y++){
+    n = map(y,width/2,width,0,1);
+    let newc = lerpColor(c2,c1,n);
+    stroke(newc);
+    line(y,0,y, width);
+  }
+
   for(let i = 0;i<particles.length;i++) {
     particles[i].createParticle();
     particles[i].moveParticle();
