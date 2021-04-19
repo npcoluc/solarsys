@@ -48,7 +48,7 @@ function setup() {
 
 
 function draw() {
-  background(0, 0, 10)
+  background(236, 68, 10)
   for(let i = 0;i<particles.length;i++) {
     particles[i].createParticle();
     particles[i].moveParticle();
