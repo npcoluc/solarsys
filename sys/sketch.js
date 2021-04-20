@@ -1,12 +1,18 @@
 let config = {}
 
-const start = async function() {
-  const response = await fetch('https://ashwinpo.github.io/solarsys/sys/config.json');
-  config = await response.json();
-  console.log(config);
+// const start = async function() {
+//   const response = await fetch('https://ashwinpo.github.io/solarsys/sys/config.json');
+//   config = await response.json();
+//   console.log(config);
+// }
+
+function preload() {
+  // Get the most recent earthquake in the database
+  let url =
+   'https://ashwinpo.github.io/solarsys/sys/config.json';
+  config = loadJSON(url);
 }
 
-start();
 
 let planets = []
 let sun
