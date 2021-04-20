@@ -1,7 +1,7 @@
 let config = {}
 
 const start = async function() {
-  const response = await fetch('./config.json');
+  const response = await fetch('https://ashwinpo.github.io/solarsys/sys/config.json');
   config = await response.json();
   //console.log(config);
 }
