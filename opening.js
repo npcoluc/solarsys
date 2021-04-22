@@ -1,5 +1,7 @@
 
 planets = []
+let button;
+let err_msg = false;
 
 function setup() {
   createCanvas(windowWidth,windowHeight);
@@ -11,6 +13,13 @@ function setup() {
     p.randomChord();
     planets.push(p);
   }
+
+  button = createButton("Continue");
+  button.mouseClicked(cont);
+  button.size(100,50);
+  button.position(windowWidth - 200, windowHeight - 75)//windowHeight-30,windowWidth - 100);
+  button.style("font-family", "Helvetica");
+  button.style("font-size", "20px");
 }
 
 function draw() {
@@ -30,13 +39,63 @@ function draw() {
     line(y,0,y, width);
   }
 
-  textSize(32);
+  textSize(24);
   fill(0,0,100)
-  textFont('sans-serif')
+  textFont('Helvetica')
   text('Select 3 Planets for your System', 30, 100);
+
+  if(err_msg){
+    textSize(18);
+    fill(0,100,100)
+    textFont('Helvetica')
+    text('Please select 3 planets', windowWidth-250, 100);
+  }
+
   for(let y = 0; y < 5; y++){
     planets[y].create();
   }
+
+
+
+
+}
+
+function cont(){
+  let count = 0
+  let config = {"planets": []};
+  for(let y = 0; y < 5; y++){
+    if(planets[y].selected){
+      count += 1;
+      saveP(planets[y], config)
+    }
+  }
+  if(count != 3){
+    err_msg = true;
+  }
+  else{
+    err_msg = false
+    saveJSON(config, 'config_.json')
+  }
+}
+
+function saveP(planet, config){
+  dict = { "from": p.from,
+          "to": p.to,
+          "d": p.d,
+          "beziers": p.beziers,
+          "slice": p.slice,
+          "x1_lines": p.x1_lines,
+          "y1_lines": p.y1_lines,
+          "x2_lines": p.x2_lines,
+          "y2_lines": p.y2_lines,
+          "x3_lines": p.x3_lines,
+          "y3_lines": p.y3_lines,
+          "x4_lines": p.x4_lines,
+          "y4_lines": p.y4_lines
+  };
+
+
+  config.planets.push(dict)
 }
 
 function mouseClicked(){
@@ -50,8 +109,6 @@ function mouseClicked(){
 
 class Planet {
   constructor(x, y) {
-    this.colors = [];
-    this.arc_colors = [];
 
     this.from = color(random(0, 360), random(50, 100), random(30, 100));
     this.to = color(random(0, 360), random(50, 100), random(10, 30));
@@ -60,7 +117,6 @@ class Planet {
     this.pos = {'x': x, 'y': y}
     this.d = random(50, 200)
     this.beziers = 2
-    this.rate = random(0.02, 0.15)
     this.slice = PI * random(1, 2)
     this.selected = false
 
