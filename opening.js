@@ -32,12 +32,20 @@ function draw() {
 
   textSize(32);
   fill(0,0,100)
+  textFont('sans-serif')
   text('Select 3 Planets for your System', 30, 100);
   for(let y = 0; y < 5; y++){
     planets[y].create();
   }
+}
 
-
+function mouseClicked(){
+  for(let y = 0; y < 5; y++){
+    d = dist(mouseX, mouseY, planets[y].pos.x, planets[y].pos.y)
+    if(d < planets[y].d / 2){
+      planets[y].clicked();
+    }
+  }
 }
 
 class Planet {
@@ -54,6 +62,7 @@ class Planet {
     this.beziers = 2
     this.rate = random(0.02, 0.15)
     this.slice = PI * random(1, 2)
+    this.selected = false
 
     this.x1_lines = [];
     this.x2_lines = [];
@@ -67,6 +76,12 @@ class Planet {
 
   create() {
     noStroke();
+    if(this.selected){
+      fill(0,0, 40)
+      ellipse(this.pos.x , this.pos.y, this.d + 7)
+    }
+
+
     fill(this.to)
     ellipse(this.pos.x , this.pos.y, this.d)
 
@@ -82,7 +97,11 @@ class Planet {
             this.pos.x + this.x4_lines[y], this.pos.y + this.y4_lines[y],
             this.pos.x + this.x2_lines[y], this.pos.y + this.y2_lines[y]);
      }
+  }
 
+  clicked(){
+    if(this.selected) this.selected = false;
+    else this.selected = true;
   }
 
   randomChord() {
