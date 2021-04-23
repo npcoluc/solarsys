@@ -79,7 +79,7 @@ function cont(){
   }
   else{
     err_msg = false
-    let url = 'http://ec2-18-191-140-209.us-east-2.compute.amazonaws.com/';
+    let url = 'https://ec2-18-191-140-209.us-east-2.compute.amazonaws.com/';
     res = httpPost(url, 'json', config)
   }
 }
