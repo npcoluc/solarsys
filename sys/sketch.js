@@ -8,8 +8,8 @@ let config = {}
 
 function preload() {
   // Get the most recent earthquake in the database
-  let url =
-   'https://ashwinpo.github.io/solarsys/sys/config.json';
+  let url = 'http://ec2-18-191-140-209.us-east-2.compute.amazonaws.com/';
+   //'https://ashwinpo.github.io/solarsys/sys/config.json';
   config = loadJSON(url);
 }
 
@@ -26,11 +26,11 @@ function setup() {
   createCanvas(windowWidth,windowHeight)
   colorMode(HSB)
   sun = new Body(config.sun.mass,createVector(0,0),createVector(0,0),
-  config.sun.c1, config.sun.c2,config.sun.c3, false)
+    [10,20,30], [40,50,60], false, [], [], [], [], [], [], [], [], 0)
   numPlanets = config.planets.length
     // Initialise the planets
   for (let i = 0; i < numPlanets; i++) {
-    let mass = config.planets[i].mass
+    let mass = config.planets[i].d/2
     let radius = random(sun.d, min(windowWidth/2,windowHeight/2))
     let angle = random(0, TWO_PI)
     let planetPos = createVector(radius * cos(angle), radius * sin(angle))
@@ -42,8 +42,12 @@ function setup() {
     planetVel.normalize()
     planetVel.mult( sqrt((G * sun.mass)/(radius)) ) // Circular orbit velocity
     planetVel.mult( random( 1-destabilise, 1+destabilise) ) // create elliptical orbit
-    planets.push( new Body(mass, planetPos, planetVel,
-      config.planets[i].c1, config.planets[i].c2,config.planets[i].c3, config.planets[i].ring) )
+    planets.push( new Body(config.planets[i].d, planetPos, planetVel,
+                           config.planets[i].from, config.planets[i].to, false,
+                           config.planets[i].x1_lines, config.planets[i].y1_lines,
+                           config.planets[i].x2_lines, config.planets[i].y2_lines,
+                           config.planets[i].x3_lines, config.planets[i].y3_lines,
+                           config.planets[i].x4_lines, config.planets[i].y4_lines, config.planets[i].beziers) )
     planets[i].randomChord()
   }
 
@@ -88,30 +92,32 @@ function draw() {
 }
 
 
-function Body(_mass, _pos, _vel, _c1, _c2, _c3, _ring){
-  this.mass = _mass
+
+function Body(_d, _pos, _vel, _from, _to, _ring, _x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4, _bez){
+  this.mass = _d / 2
   this.pos = _pos
   this.vel = _vel
-  this.d = this.mass*2
+  this.d = _d
   this.thetaInit = 0
   this.path = []
   this.pathLen = 10
-  this.from = color(_c1, _c2, _c3);
-  this.to = color(_c1 + random(-30,30), random(50, 100), random(5, 30));
-  this.inc = 0
-  this.rate = random(0.01, 0.1)
-  this.x1_lines = [];
-  this.x2_lines = [];
-  this.y1_lines = [];
-  this.y2_lines = [];
-  this.x3_lines = [];
-  this.x4_lines = [];
-  this.y3_lines = [];
-  this.y4_lines = [];
-  this.line_col = [0,0,255] //[Math.floor(Math.random() * 255), Math.floor(Math.random() * 255), Math.floor(Math.random() * 200) + 55]
+  this.from = color(_from[0], _from[1], _from[2]);
+  this.to = color(_to[0], _to[1], _to[2]);
+  this.beziers = 2
+
+  this.x1_lines = _x1;
+  this.y1_lines = _y1;
+  this.x2_lines = _x2;
+  this.y2_lines = _y2;
+  this.x3_lines = _x3;
+  this.y3_lines = _y3;
+  this.x4_lines = _x4;
+  this.y4_lines = _y4;
+
+  this.line_col = [0,0,255]
   this.ring = _ring
   this.ringAngle = random(-5,5)
-  this.beziers = 4
+
   this.arc_angle = PI * random(1, 2)
   this.show = function() {
     stroke(this.line_col[0], this.line_col[1], this.line_col[2])

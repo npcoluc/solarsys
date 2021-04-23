@@ -62,7 +62,12 @@ function draw() {
 
 function cont(){
   let count = 0
-  let config = {"planets": []};
+  let config = {"sun":{
+                  "c1": 35,
+                  "c2": 200,
+                  "c3": 200,
+                  "mass": 75 },
+                "planets": []};
   for(let y = 0; y < 5; y++){
     if(planets[y].selected){
       count += 1;
@@ -74,13 +79,14 @@ function cont(){
   }
   else{
     err_msg = false
-    saveJSON(config, 'config_.json')
+    let url = 'http://ec2-18-191-140-209.us-east-2.compute.amazonaws.com/';
+    res = httpPost(url, 'json', config)
   }
 }
 
-function saveP(planet, config){
-  dict = { "from": p.from,
-          "to": p.to,
+function saveP(p, config){
+  dict = { "from": p.from_arr,
+          "to": p.to_arr,
           "d": p.d,
           "beziers": p.beziers,
           "slice": p.slice,
@@ -109,16 +115,18 @@ function mouseClicked(){
 
 class Planet {
   constructor(x, y) {
-
-    this.from = color(random(0, 360), random(50, 100), random(30, 100));
-    this.to = color(random(0, 360), random(50, 100), random(10, 30));
+    this.from_arr = [random(0, 360), random(50, 100), random(30, 100)]
+    this.from = color(this.from_arr[0], this.from_arr[1], this.from_arr[2]);
+    this.to_arr = [random(0, 360), random(50, 100), random(10, 30)];
+    this.to = color(this.to_arr[0], this.to_arr[1], this.to_arr[2]);
     this.c1 = lerpColor(this.from, this.to, 0.33);
     this.c2 = lerpColor(this.from, this.to, 0.66);
     this.pos = {'x': x, 'y': y}
-    this.d = random(50, 200)
+    this.d = random(50, 125)
     this.beziers = 2
     this.slice = PI * random(1, 2)
     this.selected = false
+    this.mass = random(10, 100)
 
     this.x1_lines = [];
     this.x2_lines = [];
