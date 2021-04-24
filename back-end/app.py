@@ -6,7 +6,7 @@ CORS(app)
 # @app.route('/success/<name>')
 # def success(name):
 #    return 'welcome %s' % name
-@app.route('/',methods = ['POST', 'GET'])
+@app.route('/api',methods = ['POST', 'GET'])
 def new_config():
    if request.method == 'POST':
       content = request.json
