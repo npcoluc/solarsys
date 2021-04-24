@@ -79,7 +79,7 @@ function cont(){
   }
   else{
     err_msg = false
-    let url = 'http://localhost:8001';
+    let url = 'http://ec2-3-15-100-29.us-east-2.compute.amazonaws.com/api';
     res = httpPost(url, 'json', config)
   }
 }
