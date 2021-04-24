@@ -79,7 +79,7 @@ function cont(){
   }
   else{
     err_msg = false
-    let url = 'http://ec2-3-15-100-29.us-east-2.compute.amazonaws.com/api';
+    let url = 'http://3.15.100.29/api';
     res = httpPost(url, 'json', config)
   }
 }

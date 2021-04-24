@@ -8,7 +8,7 @@ let config = {}
 
 function preload() {
   // Get the most recent earthquake in the database
-  let url = 'http://ec2-3-15-100-29.us-east-2.compute.amazonaws.com/api';
+  let url = 'http://3.15.100.29/api';
    //'https://ashwinpo.github.io/solarsys/sys/config.json';
   config = loadJSON(url);
 }
