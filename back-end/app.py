@@ -3,10 +3,9 @@ from flask_cors import CORS
 import json
 app = Flask(__name__)
 CORS(app)
-# @app.route('/success/<name>')
-# def success(name):
-#    return 'welcome %s' % name
+
 @app.route('/api',methods = ['POST', 'GET'])
+@app.route('/',methods = ['POST', 'GET'])
 def new_config():
    if request.method == 'POST':
       content = request.json
@@ -23,4 +22,4 @@ def new_config():
       return response
 
 if __name__ == '__main__':
-   app.run(debug = True)
+   app.run(debug = True, port=8001)

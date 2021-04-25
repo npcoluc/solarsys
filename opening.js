@@ -63,10 +63,8 @@ function draw() {
 function cont(){
   let count = 0
   let config = {"sun":{
-                  "c1": 35,
-                  "c2": 200,
-                  "c3": 200,
-                  "mass": 75 },
+                  "col": [60, 100, 100],
+                  "d": 150 },
                 "planets": []};
   for(let y = 0; y < 5; y++){
     if(planets[y].selected){
@@ -79,8 +77,9 @@ function cont(){
   }
   else{
     err_msg = false
-    let url = 'http://3.15.100.29/api';
+    let url = "http://127.0.0.1:8001/"; //'http://3.15.100.29/api';
     res = httpPost(url, 'json', config)
+    window.location.replace('http://127.0.0.1:8080/sys/sys.html');
   }
 }
 
@@ -89,7 +88,7 @@ function saveP(p, config){
           "to": p.to_arr,
           "d": p.d,
           "beziers": p.beziers,
-          "slice": p.slice,
+          "angle": p.slice,
           "x1_lines": p.x1_lines,
           "y1_lines": p.y1_lines,
           "x2_lines": p.x2_lines,
@@ -122,7 +121,7 @@ class Planet {
     this.c1 = lerpColor(this.from, this.to, 0.33);
     this.c2 = lerpColor(this.from, this.to, 0.66);
     this.pos = {'x': x, 'y': y}
-    this.d = random(50, 125)
+    this.d = random(40, 155)
     this.beziers = 2
     this.slice = PI * random(1, 2)
     this.selected = false
