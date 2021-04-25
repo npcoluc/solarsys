@@ -79,7 +79,7 @@ function cont(){
     err_msg = false
     let url = "http://127.0.0.1:8001/"; //'http://3.15.100.29/api';
     res = httpPost(url, 'json', config)
-    window.location.replace('http://127.0.0.1:8080/sys/sys.html');
+    window.location.replace('http://3.15.100.29/sys/sys.html'); //'http://127.0.0.1:8080/sys/sys.html');
   }
 }
 
