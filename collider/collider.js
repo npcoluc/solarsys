@@ -1,9 +1,21 @@
 let config = {}
+let child;
+let child_flag = false;
+let newsys = {  "username": "",
+                "sun":{
+                  "col": [60, 100, 100],
+                  "d": 150 },
+                "planets": []};
 
 function preload() {
   // Get the most recent planets
-  let url = 'http://3.15.100.29/api'; //"http://127.0.0.1:8001/"//
-  config = loadJSON(url);
+  let url = "http://127.0.0.1:8001/sketch"//'http://3.15.100.29/api'; //'
+  username = getItem("username")
+  console.log(username)
+  httpPost(url, 'json', {'username': username}).then((data) => {
+    config = data
+    })
+  console.log(config)
 }
 
 planets = []
@@ -13,6 +25,10 @@ let err_msg = false;
 function setup() {
   createCanvas(windowWidth,windowHeight);
   colorMode(HSB);
+
+  if(!config.sun){
+    return
+  }
   numPlanets = config.planets.length
   for (let i = 0; i < numPlanets; i++) {
     planetPos = {'x': windowWidth/(numPlanets + 1) * i + 300, 'y':windowHeight/2}
@@ -34,7 +50,15 @@ function setup() {
   button.style("font-size", "20px");
 }
 
+setuped = false
 function draw() {
+  if(!config.sun){
+    return
+  }
+  else if(!setuped){
+    setup()
+    setuped = true
+  }
   let c1 = color(236, 68, 1)
   let c2 = color(236, 68, 20)
   //background(236, 68, 10)
@@ -63,44 +87,80 @@ function draw() {
     text('Please select 2 planets', windowWidth-250, 100);
   }
 
-  for(let y = 0; y < numPlanets; y++){
-    planets[y].create();
+  if (child_flag == false){
+
+    for(let y = 0; y < numPlanets; y++){
+      planets[y].create();
+    }
+
   }
 
-
-
+  else {
+    child.create()
+  }
 
 }
 
 function collide(){
 
    let count = 0
-  // let config = {"sun":{
-  //                 "col": [60, 100, 100],
-  //                 "d": 150 },
-  //               "planets": []};
+   let parents = []
    for(let y = 0; y < numPlanets; y++){
      if(planets[y].selected){
        count += 1;
-  //     saveP(planets[y], config)
+       parents.push(planets[y])
+     }
+     else{
+       saveP(planets[y], newsys)
      }
    }
    if(count != 2){
      err_msg = true;
+     newsys = {  "username": input.value(),
+                     "sun":{
+                       "col": [60, 100, 100],
+                       "d": 150 },
+                     "planets": []};
    }
    else{
      err_msg = false
-     console.log("collide")
+     let _from = lerpColor(parents[0].from, parents[1].from, random(0, 1))
+     let _to = lerpColor(parents[0].to, parents[1].to, random(0, 1))
+     let _pos = {'x': windowWidth/2, 'y':windowHeight/2}
+     let _from_arr = [hue(_from), saturation(_from), brightness(_from)]
+     let _to_arr = [hue(_to), saturation(_to), brightness(_to)]
+     child = new Planet(randomGaussian((parents[0].d + parents[1].d)/2, (parents[0].d - parents[1].d)/3),
+                            _pos, _from_arr, _to_arr, false,
+                            [], [], [], [],[], [], [], [],
+                            parents[0].beziers, parents[0].arc_angle);
+      child.randomChord();
+      child_flag = true;
+
+      button.html("Add to System")
+      button.mouseClicked(add2sys)
+      button.size(160, 50)
+
+      saveP(child, newsys)
+
    }
   //   let url = "http://127.0.0.1:8001/"; //'http://3.15.100.29/api';
   //   res = httpPost(url, 'json', config)
   //   window.location.replace('http://127.0.0.1:8080/sys/sys.html');
   // }
 }
+function add2sys(){
+  let url = "http://127.0.0.1:8001/api"; //'http://3.15.100.29/api';
+  username = getItem("username")
+  newsys.username = username
+  res = httpPost(url, 'json', newsys)
+  window.location.replace('http://127.0.0.1:8080/sys/sys.html');
+}
 
-function saveP(p, config){
-  dict = { "from": p.from_arr,
-          "to": p.to_arr,
+function saveP(p, newsys){
+  let _from_arr = [hue(p.from), saturation(p.from), brightness(p.from)]
+  let _to_arr = [hue(p.to), saturation(p.to), brightness(p.to)]
+  dict = { "from": _from_arr,
+          "to": _to_arr,
           "d": p.d,
           "beziers": p.beziers,
           "angle": p.slice,
@@ -115,8 +175,9 @@ function saveP(p, config){
   };
 
 
-  config.planets.push(dict)
+  newsys.planets.push(dict)
 }
+
 
 function mouseClicked(){
   for(let y = 0; y < numPlanets; y++){
@@ -173,6 +234,28 @@ class Planet {
             this.pos.x + this.x4_lines[y], this.pos.y + this.y4_lines[y],
             this.pos.x + this.x2_lines[y], this.pos.y + this.y2_lines[y]);
      }
+  }
+
+  randomChord() {
+    // find a random point on a circle
+    for(let y = 0; y < this.beziers; y++) {
+      // find a random point on a circle
+      let angle1 = random(0, 2 * PI);
+      this.x1_lines.push(this.d * cos(angle1) * .5);
+      this.y1_lines.push(this.d * sin(angle1) * .5);
+
+      // find another random point on the circle
+      let angle2 = random(0, 2 * PI);
+      this.x2_lines.push(this.d * cos(angle2) * .5);
+      this.y2_lines.push(this.d * sin(angle2) * .5);
+
+      this.x3_lines.push(this.d * cos(angle2 - PI * random(2)) * .5);
+      this.y3_lines.push(this.d * sin(angle2 - PI * random(2)) * .5);
+
+      this.x4_lines.push(this.d * cos(angle2 + PI * random(2)) * .5);
+      this.y4_lines.push(this.d * sin(angle2 + PI * random(2)) * .5);
+
+    }
   }
 
   clicked(){
