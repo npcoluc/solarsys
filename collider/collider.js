@@ -9,7 +9,7 @@ let newsys = {  "username": "",
 
 function preload() {
   // Get the most recent planets
-  let url = "http://127.0.0.1:8001/sketch"//'http://3.15.100.29/api'; //'
+  let url = 'http://3.15.100.29/sketch'; // "http://127.0.0.1:8001/sketch"// //'
   username = getItem("username")
   console.log(username)
   httpPost(url, 'json', {'username': username}).then((data) => {
@@ -149,11 +149,11 @@ function collide(){
   // }
 }
 function add2sys(){
-  let url = "http://127.0.0.1:8001/api"; //'http://3.15.100.29/api';
+  let url = 'http://3.15.100.29/api'; //"http://127.0.0.1:8001/api"; //
   username = getItem("username")
   newsys.username = username
   res = httpPost(url, 'json', newsys)
-  window.location.replace('http://127.0.0.1:8080/sys/sys.html');
+  window.location.replace("http://3.15.100.29/sys/sys.html"); //'http://127.0.0.1:8080/sys/sys.html');
 }
 
 function saveP(p, newsys){

@@ -2,7 +2,7 @@ let config = {}
 
 function preload() {
   // Get the most recent planets
-  let url = "http://127.0.0.1:8001/sketch"//'http://3.15.100.29/api'; //'
+  let url = 'http://3.15.100.29/sketch'; //' "http://127.0.0.1:8001/sketch"
   username = getItem("username")
   console.log(username)
   httpPost(url, 'json', {'username': username}).then((data) => {
