@@ -9,7 +9,7 @@ let config = {}
 function preload() {
   // Get the most recent earthquake in the database
   let url =
-   'https://ashwinpo.github.io/solarsys/sys/config.json';
+   'https://npcoluc.github.io/solarsys/sys/config.json';
   config = loadJSON(url);
 }
 
