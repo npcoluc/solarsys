@@ -1,5 +1,8 @@
 
 planets = []
+let button, input;
+let err_msg = false;
+let err_name = false;
 
 function setup() {
   createCanvas(windowWidth,windowHeight);
@@ -11,6 +14,17 @@ function setup() {
     p.randomChord();
     planets.push(p);
   }
+
+  button = createButton("Continue");
+  button.mouseClicked(cont);
+  button.size(100,50);
+  button.position(windowWidth - 200, windowHeight - 75)//windowHeight-30,windowWidth - 100);
+  button.style("font-family", "Helvetica");
+  button.style("font-size", "20px");
+
+  input = createInput()
+  input.position(windowWidth - 400, windowHeight - 75)
+
 }
 
 function draw() {
@@ -30,13 +44,87 @@ function draw() {
     line(y,0,y, width);
   }
 
-  textSize(32);
+  textSize(24);
   fill(0,0,100)
-  textFont('sans-serif')
+  textFont('Helvetica')
   text('Select 3 Planets for your System', 30, 100);
+
+  textSize(16);
+  text('Enter username (new or old)', windowWidth - 400, windowHeight - 100);
+
+  if(err_msg){
+    textSize(18);
+    fill(0,100,100)
+    textFont('Helvetica')
+    text('Please select 3 planets', windowWidth-250, 100);
+  }
+
+  else if (err_name) {
+    textSize(18);
+    fill(0,100,100)
+    textFont('Helvetica')
+    text('Please enter username', windowWidth-250, 100);
+  }
+
+
   for(let y = 0; y < 5; y++){
     planets[y].create();
   }
+
+
+
+
+}
+
+function cont(){
+  let count = 0
+  let config = {  "username": input.value(),
+                  "sun":{
+                    "col": [60, 100, 100],
+                    "d": 150 },
+                  "planets": []};
+  for(let y = 0; y < 5; y++){
+    if(planets[y].selected){
+      count += 1;
+      saveP(planets[y], config)
+    }
+  }
+  if(count != 3){
+    err_msg = true;
+  }
+  else if (input.value().length == 0) {
+    err_msg = false;
+    err_name = true;
+  }
+  else{
+    err_msg = false;
+    err_name=false;
+    storeItem('username', config.username)
+    let url = 'http://3.15.100.29/api'; //"http://127.0.0.1:8001/api";
+    res = httpPost(url, 'json', config)
+    console.log(res)
+    window.location.replace('http://3.15.100.29/sys/sys.html'); //'http://127.0.0.1:8080/sys/sys.html'
+ }
+}
+
+function saveP(p, config){
+  dict = { "from": p.from_arr,
+          "to": p.to_arr,
+          "d": p.d,
+          "beziers": p.beziers,
+          "angle": p.slice,
+          "x1_lines": p.x1_lines,
+          "y1_lines": p.y1_lines,
+          "x2_lines": p.x2_lines,
+          "y2_lines": p.y2_lines,
+          "x3_lines": p.x3_lines,
+          "y3_lines": p.y3_lines,
+          "x4_lines": p.x4_lines,
+          "y4_lines": p.y4_lines
+  };
+
+
+  config.planets.push(dict)
 }
 
 function mouseClicked(){
@@ -50,19 +138,18 @@ function mouseClicked(){
 
 class Planet {
   constructor(x, y) {
-    this.colors = [];
-    this.arc_colors = [];
-
-    this.from = color(random(0, 360), random(50, 100), random(30, 100));
-    this.to = color(random(0, 360), random(50, 100), random(10, 30));
+    this.from_arr = [random(0, 360), random(50, 100), random(30, 100)]
+    this.from = color(this.from_arr[0], this.from_arr[1], this.from_arr[2]);
+    this.to_arr = [random(0, 360), random(50, 100), random(10, 30)];
+    this.to = color(this.to_arr[0], this.to_arr[1], this.to_arr[2]);
     this.c1 = lerpColor(this.from, this.to, 0.33);
     this.c2 = lerpColor(this.from, this.to, 0.66);
     this.pos = {'x': x, 'y': y}
-    this.d = random(50, 200)
+    this.d = random(40, 155)
     this.beziers = 2
-    this.rate = random(0.02, 0.15)
     this.slice = PI * random(1, 2)
     this.selected = false
+    this.mass = random(10, 100)
 
     this.x1_lines = [];
     this.x2_lines = [];
