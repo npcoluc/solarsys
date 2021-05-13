@@ -1,14 +1,13 @@
 let config = {}
 
 function preload() {
-  // Get the most recent planets
-  let url = 'http://3.15.100.29/sketch'; //' "http://127.0.0.1:8001/sketch"
-  username = getItem("username")
-  console.log(username)
-  httpPost(url, 'json', {'username': username}).then((data) => {
-    config = data
-    })
-  console.log(config)
+//found1
+  // Get the most recent earthquake in the database
+  let url =
+   'https://npcoluc.github.io/solarsys/sys/config.json';
+  config = loadJSON(url);
+
+main
 }
 
 
