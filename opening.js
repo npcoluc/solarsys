@@ -100,6 +100,7 @@ function cont(){
     err_msg = false;
     err_name=false;
     storeItem('username', config.username)
+    //issue, save to local data sheet
     let url = 'http://3.15.100.29/api'; //"http://127.0.0.1:8001/api";
     res = httpPost(url, 'json', config)
     console.log(res)
