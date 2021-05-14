@@ -101,10 +101,14 @@ function cont(){
     err_name=false;
     storeItem('username', config.username)
     //issue, save to local data sheet
-    let url = 'http://3.15.100.29/api'; //"http://127.0.0.1:8001/api";
-    res = httpPost(url, 'json', config)
+    //let url = 'http://3.15.100.29/api'; //"http://127.0.0.1:8001/api";
+    res = saveJSON(config, 'config_.json')//httpPost(url, 'json', config)
+    //above line is a guess
     console.log(res)
-    window.location.replace('http://3.15.100.29/sys/sys.html'); //'http://127.0.0.1:8080/sys/sys.html'
+    
+    //save to data.txt
+    
+    //window.location.replace('http://3.15.100.29/sys/sys.html'); //'http://127.0.0.1:8080/sys/sys.html'
  }
 }
 
