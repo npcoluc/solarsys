@@ -102,7 +102,7 @@ function cont(){
     storeItem('username', config.username)
     //issue, save to local data sheet
     //let url = 'http://3.15.100.29/api'; //"http://127.0.0.1:8001/api";
-    res = saveJSON(config, 'config_.json')//httpPost(url, 'json', config)
+    res = saveJSON(config, 'config.json')//httpPost(url, 'json', config)
     //above line is a guess
     //console.log(res)
     dimensions.push(res)
