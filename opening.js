@@ -106,7 +106,7 @@ function cont(){
     //above line is a guess
     console.log(res)
     
-    //save to data.txt
+    //save planet data somewhere
     
     //window.location.replace('http://3.15.100.29/sys/sys.html'); //'http://127.0.0.1:8080/sys/sys.html'
  }
